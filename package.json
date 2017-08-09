@@ -5,8 +5,7 @@
   "main": "app/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start1": "webpack-dev-server --open",
-    "start2": "node server.js"
+    "start": "node server.js"
   },
   "keywords": [
     "webpack",
