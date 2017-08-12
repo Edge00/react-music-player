@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Progress from '../components/progress';
+import { Link } from 'react-router-dom';
 import './player.scss';
 
 let musicDuration = null;
@@ -28,12 +29,12 @@ class Player extends Component {
     });
   }
 
-  componentWillUnMount() {
+  componentWillUnmount() {
     $('#player').unbind($.jPlayer.event.timeupdate);
   }
 
   setProgress(pgs) {
-    $('#player').jPlayer('play', musicDuration * pgs);
+    $('#player').jPlayer(this.state.isPlay ? 'play' : 'pause', musicDuration * pgs);
   }
 
   setVolume(pgs) {
@@ -42,13 +43,13 @@ class Player extends Component {
 
   play() {
     $('#player').jPlayer(this.state.isPlay ? 'pause' : 'play');
-    this.setState({ isPlay: this.state.isPlay ? false : true});
+    this.setState({ isPlay: !this.state.isPlay});
   }
 
   render() {
     return (
       <div className="container-player">
-        <h1 className="caption">我的私人音乐坊 &gt;</h1>
+        <h1 className="caption"><Link to="/list">我的私人音乐坊</Link> &gt;</h1>
         <div className="mt20 row">
           <div className="controll-wrapper">
             <h2 className="music-title">
@@ -86,7 +87,11 @@ class Player extends Component {
             <div className="mt35 row">
               <div>
                 <i className="icon prev"></i>
-                <i onClick={this.play} className="icon ml20 play"></i>
+                <i
+                  onClick={this.play}
+                  className={`icon ml20 ${this.state.isPlay ? 'pause' : 'play'}`}
+                >
+                </i>
                 <i className="icon next ml20"></i>
               </div>
               <div className="-col-auto">

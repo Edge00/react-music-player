@@ -1,37 +1,53 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './progress.scss';
 
+class Progress extends Component {
 
-class Progess extends Component {
+  constructor(props) {
+    super(props);
+    this.setProgress = this.setProgress.bind(this);
+  }
 
-    constructor(props) {
-        super(props);
-        this.setProgress = this.setProgress.bind(this);
-    }
+  setProgress(e) {
+    console.log(e.pageX);
+    let settedProgress = (e.pageX - this.refs.propgressBar.getBoundingClientRect().left) / this.refs.propgressBar.clientWidth;
+    this.props.setProgress(settedProgress);
+  }
 
-    setProgress(e) {
-        let settedProgress = (e.screenX - this.refs.propgressBar.getBoundingClientRect().left) / this.refs.propgressBar.clientWidth;
-        this.props.setProgress(settedProgress);
-    }
+  render() {
+    let barStyle = {
+      width: `${this.props.progress}%`,
+      background: this.props.barColor
+    };
 
-    render() {
-        let barStyle = {
-            width: `${this.props.progress}%`,
-            background: this.props.barColor
-        };
-
-        return(
-            <div onClick={this.setProgress}
-                ref="propgressBar"
-                className="components-progress"
-            >
-                <div
-                    className="progress"
-                    style={barStyle}
-                ></div>
-            </div>
-        );
-    }
+    return (
+      <div onClick={this.setProgress} ref="propgressBar" className="components-progress">
+        <div className="progress" style={barStyle}></div>
+      </div>
+    );
+  }
 }
 
-export default Progess;
+// const Progress = (props) => {
+//
+//   console.log(this.findDOMNode);
+//
+//   const setProgress = (e) => {
+//     let settedProgress = (e.pageX - this.refs.propgressBar.getBoundingClientRect().left) / this.refs.propgressBar.clientWidth;
+//     this.props.setProgress(settedProgress);
+//   };
+//
+//   let barStyle = {
+//     width: `${this.props.progress}%`,
+//     background: this.props.barColor
+//   };
+//
+//   return (
+//     <div onClick={setProgress} ref="propgressBar" className="components-progress">
+//       <div className="progress" style={barStyle}></div>
+//     </div>
+//   );
+//
+// }
+
+export default Progress;
