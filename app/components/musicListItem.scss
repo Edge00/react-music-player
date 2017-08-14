@@ -3,6 +3,8 @@
 	line-height: 36px;
 	border-bottom: 1px solid #ddd;
 	text-indent: 10px;
+  transition: all .1s;
+  user-select: none;
 	cursor: pointer;
 	.delete {
 		cursor: pointer;
@@ -34,8 +36,12 @@
 
 	&.focus {
 		color: #2f9842;
+    background: #ddd;
 	}
 }
 .components-musiclistitem:hover {
 	background: #eee;
+}
+.components-musiclistitem:active {
+	background: #ddd;
 }

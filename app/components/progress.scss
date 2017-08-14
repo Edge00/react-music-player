@@ -6,7 +6,7 @@
     .progress {
         width: 0%;
         height: 3px;
-        transition: all .2s;
+        transition: all .1s linear;
         transform-origin: left center;
     }
 }

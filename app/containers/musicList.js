@@ -10,7 +10,7 @@ class Musiclist extends Component {
   render() {
 
     let listElements = this.props.musicList.map((item) => {
-      return(
+      return (
         <MusiclistItem
           focus={item === this.props.cuerrentMusicItem}
           key={item.id}
@@ -19,7 +19,7 @@ class Musiclist extends Component {
       );
     });
 
-    return(
+    return (
       <div>
         <ul>
           {listElements}

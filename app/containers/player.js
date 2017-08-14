@@ -49,7 +49,9 @@ class Player extends Component {
   render() {
     return (
       <div className="container-player">
-        <h1 className="caption"><Link to="/list">我的私人音乐坊</Link> &gt;</h1>
+        <h1 className="caption">
+          <Link to="/list">我的私人音乐坊 &gt;</Link>
+        </h1>
         <div className="mt20 row">
           <div className="controll-wrapper">
             <h2 className="music-title">
@@ -76,7 +78,8 @@ class Player extends Component {
             </div>
             <div style={{
               height: 10,
-              lineHeight: '10px'
+              lineHeight: '10px',
+              marginTop: '20px'
             }}>
               <Progress
                 progress={this.state.progress}
@@ -107,7 +110,7 @@ class Player extends Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
