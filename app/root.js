@@ -19,7 +19,7 @@ class Root extends Component {
     this.playMusic = this.playMusic
   }
 
-  playMusic(musicItem) {
+  playMusic() {
     $('#player').jPlayer('setMedia', {
       mp3: this.state.cuerrentMusicItem.file
     }).jPlayer('play');
@@ -28,12 +28,11 @@ class Root extends Component {
   componentDidMount() {
 
     $('#player').jPlayer({
-      ready: () => {
-        $('#player').jPlayer('setMedia', {mp3: this.state.cuerrentMusicItem.file}).jPlayer('play');
-      },
       supplied: 'mp3',
       wmode: 'window'
     });
+
+    this.playMusic(this.state.cuerrentMusicItem);
 
     Pubsub.subscribe('CHOOSE_MUSIC', (msg, musicItem) => {
       this.setState({
@@ -49,7 +48,6 @@ class Root extends Component {
     });
 
   }
-
 
   componentWillUnMount() {
     Pubsub.unSubscribe('CHOOSE_MUSIC');
@@ -75,15 +73,6 @@ class Root extends Component {
       <Router>
         <div>
           <Header/>
-
-          {/* <nav>
-            <h1>
-              <Link to="/">播放器</Link>
-            </h1>
-            <h1>
-              <Link to="/list">音乐列表</Link>
-            </h1>
-          </nav> */}
 
           <Route exact path="/" component={Home}/>
           <Route path="/list" component={List}/>

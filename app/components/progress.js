@@ -9,7 +9,6 @@ class Progress extends Component {
   }
 
   setProgress(e) {
-    console.log(e.pageX);
     let settedProgress = (e.pageX - this.refs.propgressBar.getBoundingClientRect().left) / this.refs.propgressBar.clientWidth;
     this.props.setProgress(settedProgress);
   }
@@ -21,7 +20,11 @@ class Progress extends Component {
     };
 
     return (
-      <div onClick={this.setProgress} ref="propgressBar" className="components-progress">
+      <div
+        ref="propgressBar"
+        onClick={this.setProgress}
+        className="components-progress"
+      >
         <div className="progress" style={barStyle}></div>
       </div>
     );

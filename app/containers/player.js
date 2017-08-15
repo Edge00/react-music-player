@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Progress from '../components/progress';
 import { Link } from 'react-router-dom';
+import Pubsub from 'pubsub-js';
 import './player.scss';
 
 let musicDuration = null;
@@ -17,9 +18,12 @@ class Player extends Component {
     this.setProgress = this.setProgress.bind(this);
     this.setVolume = this.setVolume.bind(this);
     this.play = this.play.bind(this);
+    this.prev = this.prev.bind(this);
+    this.next = this.next.bind(this);
   }
 
   componentDidMount() {
+
     $('#player').bind($.jPlayer.event.timeupdate, (e) => {
       musicDuration = e.jPlayer.status.duration;
       this.setState({
@@ -27,6 +31,7 @@ class Player extends Component {
         progress: e.jPlayer.status.currentPercentAbsolute
       });
     });
+
   }
 
   componentWillUnmount() {
@@ -44,6 +49,14 @@ class Player extends Component {
   play() {
     $('#player').jPlayer(this.state.isPlay ? 'pause' : 'play');
     this.setState({ isPlay: !this.state.isPlay});
+  }
+
+  prev() {
+    Pubsub.publish('PREV_MUSIC');
+  }
+
+  next() {
+    Pubsub.publish('NEXT_MUSIC');
   }
 
   render() {
@@ -89,7 +102,7 @@ class Player extends Component {
             </div>
             <div className="mt35 row">
               <div>
-                <i className="icon prev"></i>
+                <i onClick={this.prev} className="icon prev"></i>
                 <i
                   onClick={this.play}
                   className={`icon ml20 ${this.state.isPlay ? 'pause' : 'play'}`}
