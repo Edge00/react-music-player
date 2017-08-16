@@ -13,25 +13,14 @@ class Player extends Component {
     this.state = {
       progress: 0,
       volume: 0,
-      isPlay: true
+      isPlay: true,
+      leftTime: ''
     },
     this.setProgress = this.setProgress.bind(this);
     this.setVolume = this.setVolume.bind(this);
     this.play = this.play.bind(this);
     this.prev = this.prev.bind(this);
     this.next = this.next.bind(this);
-  }
-
-  componentDidMount() {
-
-    $('#player').bind($.jPlayer.event.timeupdate, (e) => {
-      musicDuration = e.jPlayer.status.duration;
-      this.setState({
-        volume: e.jPlayer.options.volume * 100,
-        progress: e.jPlayer.status.currentPercentAbsolute
-      });
-    });
-
   }
 
   componentWillUnmount() {
@@ -59,6 +48,27 @@ class Player extends Component {
     Pubsub.publish('NEXT_MUSIC');
   }
 
+  formatTime(time) {
+    time = Math.floor(time);
+    let minutes = Math.floor(time / 60);
+    let seconds = Math.floor(time % 60);
+    seconds < 10 ? `0${seconds}` : seconds;
+    return `${minutes}:${seconds}`;
+  }
+
+  componentDidMount() {
+
+    $('#player').bind($.jPlayer.event.timeupdate, (e) => {
+      musicDuration = e.jPlayer.status.duration;
+      this.setState({
+        volume: e.jPlayer.options.volume * 100,
+        progress: e.jPlayer.status.currentPercentAbsolute,
+        leftTime: this.formatTime(musicDuration * (1 - e.jPlayer.status.currentPercentAbsolute / 100))
+      });
+    });
+
+  }
+
   render() {
     return (
       <div className="container-player">
@@ -74,7 +84,7 @@ class Player extends Component {
               {this.props.cuerrentMusicItem.artist}
             </h3>
             <div className="row mt20">
-              <div className="left-time -col-auto">-2:00</div>
+              <div className="left-time -col-auto">-{this.state.leftTime}</div>
               <div className="volume-container">
                 <i className="icon-volume rt" style={{
                   top: 5,
@@ -108,10 +118,11 @@ class Player extends Component {
                   className={`icon ml20 ${this.state.isPlay ? 'pause' : 'play'}`}
                 >
                 </i>
-                <i className="icon next ml20"></i>
+                <i onClick={this.next} className="icon next ml20"></i>
               </div>
               <div className="-col-auto">
                 <i className="icon repeat-cycle"></i>
+                {/* once random cycle */}
               </div>
             </div>
           </div>

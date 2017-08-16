@@ -25,6 +25,25 @@ class Root extends Component {
     }).jPlayer('play');
   }
 
+  playNext(type = 'next') {
+    let index = this.findMusicIndex(this.state.cuerrentMusicItem);
+    let newIndex = null;
+    let musicListLength = this.state.musicList.length;
+    if (type === 'next') {
+      newIndex = (index + 1) % musicListLength;
+    } else {
+      newIndex = (index - 1 + musicListLength) % musicListLength;
+    }
+    this.setState({
+      cuerrentMusicItem: this.state.musicList[newIndex]
+    });
+    this.playMusic();
+  }
+
+  findMusicIndex(musicItem) {
+    return this.state.musicList.indexOf(musicItem);
+  }
+
   componentDidMount() {
 
     $('#player').jPlayer({
@@ -33,6 +52,10 @@ class Root extends Component {
     });
 
     this.playMusic(this.state.cuerrentMusicItem);
+
+    $('#player').bind($.jPlayer.event.ended, (e) => {
+      this.playNext();
+    });
 
     Pubsub.subscribe('CHOOSE_MUSIC', (msg, musicItem) => {
       this.setState({
@@ -45,6 +68,15 @@ class Root extends Component {
       this.setState({
         musicList: this.state.musicList.filter( item => musicItem !== item)
       });
+      this.playNext('next');
+    });
+
+    Pubsub.subscribe('PREV_MUSIC', (msg) => {
+      this.playNext('prev');
+    });
+
+    Pubsub.subscribe('NEXT_MUSIC', (msg) => {
+      this.playNext('next');
     });
 
   }
@@ -52,6 +84,9 @@ class Root extends Component {
   componentWillUnMount() {
     Pubsub.unSubscribe('CHOOSE_MUSIC');
     Pubsub.unSubscribe('DELETE_MUSIC');
+    $('#player').unbind($.jPlayer.event.ended);
+    Pubsub.unSubscribe('PREV_MUSIC');
+    Pubsub.unSubscribe('NEXT_MUSIC');
   }
 
   render() {
