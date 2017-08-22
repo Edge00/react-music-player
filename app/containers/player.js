@@ -21,6 +21,7 @@ class Player extends Component {
     this.play = this.play.bind(this);
     this.prev = this.prev.bind(this);
     this.next = this.next.bind(this);
+    this.changeCycleModel = this.changeCycleModel.bind(this);
   }
 
   componentWillUnmount() {
@@ -56,8 +57,12 @@ class Player extends Component {
     return `${minutes}:${seconds}`;
   }
 
-  componentDidMount() {
+  changeCycleModel() {
+    Pubsub.publish('CHANGE_CYCLE_MODEL');
+  }
 
+  componentDidMount() {
+    console.log(this.props.cuerrentMusicItem.title);
     $('#player').bind($.jPlayer.event.timeupdate, (e) => {
       musicDuration = e.jPlayer.status.duration;
       this.setState({
@@ -121,8 +126,10 @@ class Player extends Component {
                 <i onClick={this.next} className="icon next ml20"></i>
               </div>
               <div className="-col-auto">
-                <i className="icon repeat-cycle"></i>
-                {/* once random cycle */}
+                <i
+                  onClick={this.changeCycleModel}
+                  className={`icon repeat-${this.props.cycleModel}`}
+                ></i>
               </div>
             </div>
           </div>

@@ -14,7 +14,8 @@ class Root extends Component {
     super(props),
     this.state = {
       musicList: MUSIC_LIST,
-      cuerrentMusicItem: MUSIC_LIST[0]
+      cuerrentMusicItem: MUSIC_LIST[0],
+      cycleModel: 'cycle'
     },
     this.playMusic = this.playMusic
   }
@@ -29,11 +30,23 @@ class Root extends Component {
     let index = this.findMusicIndex(this.state.cuerrentMusicItem);
     let newIndex = null;
     let musicListLength = this.state.musicList.length;
-    if (type === 'next') {
-      newIndex = (index + 1) % musicListLength;
-    } else {
-      newIndex = (index - 1 + musicListLength) % musicListLength;
+    switch(type) {
+      case 'cycle':
+        newIndex = (index + 1) % musicListLength;
+        break;
+      case 'once':
+        newIndex = index;
+        break;
+      case 'random':
+        newIndex = Math.round(Math.random() * musicListLength);
+        break;
+      case 'prev':
+        newIndex = (index - 1 + musicListLength) % musicListLength;
+        break;
+      default:
+        newIndex = (index + 1) % musicListLength;
     }
+
     this.setState({
       cuerrentMusicItem: this.state.musicList[newIndex]
     });
@@ -54,7 +67,17 @@ class Root extends Component {
     this.playMusic(this.state.cuerrentMusicItem);
 
     $('#player').bind($.jPlayer.event.ended, (e) => {
-      this.playNext();
+      switch(this.state.cycleModel) {
+        case 'cycle':
+          this.playNext('cycle');
+          break;
+        case 'once':
+          this.playNext('once');
+          break;
+        case 'random':
+          this.playNext('random');
+          break;
+      }
     });
 
     Pubsub.subscribe('CHOOSE_MUSIC', (msg, musicItem) => {
@@ -79,6 +102,14 @@ class Root extends Component {
       this.playNext('next');
     });
 
+    Pubsub.subscribe('CHANGE_CYCLE_MODEL', (msg) => {
+      const MODEL = ['cycle', 'once', 'random'];
+      let currentModel = MODEL.indexOf(this.state.cycleModel);
+      let newModel = (currentModel + 1) % 3;
+      this.setState({
+        cycleModel: MODEL[newModel]
+      });
+    });
   }
 
   componentWillUnMount() {
@@ -87,12 +118,14 @@ class Root extends Component {
     $('#player').unbind($.jPlayer.event.ended);
     Pubsub.unSubscribe('PREV_MUSIC');
     Pubsub.unSubscribe('NEXT_MUSIC');
+    Pubsub.unSubscribe('CHANGE_CYCLE_MODEL');
   }
 
   render() {
 
     const Home = () => (
       <Player
+        cycleModel={this.state.cycleModel}
         cuerrentMusicItem={this.state.cuerrentMusicItem}
       />
     );
