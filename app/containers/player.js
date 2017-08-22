@@ -62,7 +62,7 @@ class Player extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props.cuerrentMusicItem.title);
+
     $('#player').bind($.jPlayer.event.timeupdate, (e) => {
       musicDuration = e.jPlayer.status.duration;
       this.setState({
