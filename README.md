@@ -11,4 +11,4 @@ A music player built by react(v15) react-router(v4) webpack(v3)
 
 ### Known Defects
 
-1. When cycle model is 'random', click next or prev button, the effect is still 'cycle' model.
+1. When cycle model is 'random', click next or prev button, the effect is still 'cycle' mode.
